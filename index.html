@@ -152,7 +152,10 @@ textarea:focus-visible,input[type="text"]:focus-visible,button:focus-visible{out
 
 /* отправка */
 .send{background:var(--accent-soft);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:14px}
-.copy{font:inherit;font-weight:600;background:var(--accent);color:var(--on-accent);border:0;border-radius:var(--r);padding:12px 20px;cursor:pointer;align-self:flex-start}
+.copy{font:inherit;font-weight:600;background:var(--accent);color:var(--on-accent);border:1.5px solid var(--accent);border-radius:var(--r);padding:12px 20px;cursor:pointer;align-self:flex-start}
+.copy.ghost{background:transparent;color:var(--accent)}
+.copy:disabled{opacity:.6;cursor:default}
+.send-actions{display:flex;flex-wrap:wrap;gap:10px}
 #status{font-size:.875rem;color:var(--ink);min-height:1.3em}
 #out{font-family:var(--f-mono);font-size:.8125rem;background:var(--sheet);min-height:220px}
 
@@ -213,7 +216,7 @@ textarea:focus-visible,input[type="text"]:focus-visible,button:focus-visible{out
   <h2>Как будем работать</h2>
   <ol class="steps">
     <li class="step"><span class="num">1</span><div><b>Вы отвечаете на вопросы и выбираете глубину</b><div class="meta">Артём · 10 минут · вопросы ниже</div></div></li>
-    <li class="step"><span class="num">2</span><div><b>Сотрудник заполняет анкету и присылает файлы</b><p class="muted">Анкета в Яндекс Форме, открывается с телефона.</p><div class="meta">Сотрудник · 30–40 минут · для «Стандарт» и «Глубоко»</div></div></li>
+    <li class="step"><span class="num">2</span><div><b>Сотрудник заполняет анкету и присылает файлы</b><p class="muted">Анкета по ссылке, открывается с телефона. Файлы прикрепляются прямо в ней.</p><div class="meta">Сотрудник · 30–40 минут · для «Стандарт» и «Глубоко»</div></div></li>
     <li class="step"><span class="num">3</span><div><b>Созвон на час</b><p class="muted">Сотрудник показывает на экране, как всё устроено сейчас.</p><div class="meta">Сотрудник, Артём по желанию · 1 час</div></div></li>
     <li class="step"><span class="num">4</span><div><b>Итог на одной странице</b><p class="muted">Как я понял процесс, 2–3 варианта с ценой и сроками, что делать первым. Вы правите, я уточняю.</p><div class="meta">От меня</div></div></li>
   </ol>
@@ -356,7 +359,7 @@ textarea:focus-visible,input[type="text"]:focus-visible,button:focus-visible{out
   <h2>Что понадобится от сотрудника</h2>
   <p class="muted">Для уровней «Стандарт» и «Глубоко».</p>
   <ul class="needs">
-    <li><b>Анкета в Яндекс Форме</b><span>30–40 минут с телефона. В каждом блоке написано, зачем он нужен. На любой вопрос можно ответить «не знаю».</span></li>
+    <li><b>Анкета по ссылке</b><span>30–40 минут с телефона, ответы сохраняются по ходу. В каждом блоке написано, зачем он нужен. На любой вопрос можно ответить «не знаю».</span></li>
     <li><b>Файлы как есть</b><span>Excel, по которому планируете, спецификация одного прицепа, скриншот 1С. Ничего не нужно причёсывать. По живому файлу видно больше, чем по любой анкете.</span></li>
     <li><b>Созвон на час</b><span>С показом экрана. Время выберем в чате.</span></li>
   </ul>
@@ -373,8 +376,11 @@ textarea:focus-visible,input[type="text"]:focus-visible,button:focus-visible{out
 
 <section class="send screen-only">
   <h2>Отправить ответы</h2>
-  <p class="prose">Нажмите кнопку и вставьте текст в чат в Telegram. Ответы сохраняются только в вашем браузере и никуда не уходят сами.</p>
-  <button type="button" class="copy" id="copy">Скопировать ответы</button>
+  <p class="prose">Нажмите «Отправить», и ответы придут мне. Черновик хранится в вашем браузере, так что можно вернуться, поправить и отправить ещё раз.</p>
+  <div class="send-actions">
+    <button type="button" class="copy" id="send">Отправить</button>
+    <button type="button" class="copy ghost" id="copy">Скопировать текстом</button>
+  </div>
   <div id="status" aria-live="polite"></div>
   <label class="label" for="out">Так будет выглядеть сообщение</label>
   <textarea id="out" readonly></textarea>
@@ -475,16 +481,17 @@ textarea:focus-visible,input[type="text"]:focus-visible,button:focus-visible{out
   var out = document.getElementById('out');
   var status = document.getElementById('status');
 
+  function collect(){
+    var data = {};
+    document.querySelectorAll('main input, main textarea').forEach(function(el){
+      if (el.id === 'out') return;
+      if (el.type === 'radio'){ if (el.checked) data[el.name] = el.value; }
+      else if (el.id) data[el.id] = el.value;
+    });
+    return data;
+  }
   function save(){
-    try {
-      var data = {};
-      document.querySelectorAll('main input, main textarea').forEach(function(el){
-        if (el.id === 'out') return;
-        if (el.type === 'radio'){ if (el.checked) data[el.name] = el.value; }
-        else if (el.id) data[el.id] = el.value;
-      });
-      localStorage.setItem(KEY, JSON.stringify(data));
-    } catch(e) {}
+    try { localStorage.setItem(KEY, JSON.stringify(collect())); } catch(e) {}
   }
   function load(){
     try {
@@ -523,6 +530,36 @@ textarea:focus-visible,input[type="text"]:focus-visible,button:focus-visible{out
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
       else fallback();
     } catch(e) { fallback(); }
+  });
+
+  var API = 'https://brief-api.supplier-watch.workers.dev';
+  var sid = null;
+  try { sid = localStorage.getItem('brief-artem-sid'); } catch(e) {}
+  if (!sid){
+    try { sid = crypto.randomUUID(); } catch(e) { sid = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+    try { localStorage.setItem('brief-artem-sid', sid); } catch(e) {}
+  }
+  document.getElementById('send').addEventListener('click', function(){
+    var btn = this;
+    btn.disabled = true; btn.textContent = 'Отправляю…';
+    var text = build();
+    out.value = text;
+    var body = JSON.stringify({answers: collect(), readable: [{id: 'бриф', q: 'Ответы Артёма', a: text}], final: true});
+    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, 20000) : null;
+    // text/plain — «простой» запрос, без preflight
+    fetch(API + '/submit?form=artem&sid=' + sid, {method: 'POST', headers: {'Content-Type': 'text/plain;charset=UTF-8'}, body: body, signal: ctrl ? ctrl.signal : undefined})
+      .then(function(r){
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        status.textContent = 'Отправлено. Спасибо!';
+      })
+      .catch(function(){
+        status.textContent = 'Не получилось отправить. Нажмите «Скопировать текстом» и вставьте ответы в чат в Telegram.';
+      })
+      .finally(function(){
+        if (timer) clearTimeout(timer);
+        btn.disabled = false; btn.textContent = 'Отправить';
+      });
   });
 })();
 </script>

@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Как у нас планируется производство</title>
+<meta name="description" content="Анкета о планировании производства. 30–40 минут, можно с телефона.">
+<meta property="og:title" content="Как у нас планируется производство">
+<meta property="og:description" content="Анкета о планировании производства. 30–40 минут, можно с телефона.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: пошаговая анкета, один раздел на экран; та же система, что у брифа */
+:root{
+  --paper:#EEF1F4; --sheet:#FFFFFF; --ink:#17212C; --ink-2:#4E5B69; --line:#D3DAE2;
+  --accent:#1D4F91; --accent-soft:#E5ECF6; --on-accent:#FFFFFF;
+  --now:#B83227; --now-soft:#FBE8E5; --next:#9A6210; --next-soft:#FBF0DC;
+  --space:#5A43AE; --space-soft:#EDE9FA; --skip:#6F7C89; --skip-soft:#EBEFF3;
+  --ok:#24704A; --warn:#9A6210;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#0E1318; --sheet:#151C24; --ink:#E5EAF0; --ink-2:#A1ADBA; --line:#2B3541;
+    --accent:#86ACE6; --accent-soft:#1A2940; --on-accent:#0E1318;
+    --now:#F0806F; --now-soft:#3A1D1A; --next:#E2AA4E; --next-soft:#352812;
+    --space:#AB98F2; --space-soft:#251F40; --skip:#95A2AF; --skip-soft:#212A33;
+    --ok:#6CC596; --warn:#E2AA4E;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--sheet);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+[hidden]{display:none!important}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+@media (min-width:800px){
+  body{background:var(--paper)}
+  .wrap{padding-block:24px 64px}
+  .sheet{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:8px 56px 48px}
+}
+p{margin:0}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--sheet);padding-block:14px 12px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.top-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.eyebrow,.label{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.steplabel{font-family:var(--f-mono);font-size:.75rem;color:var(--ink-2);text-align:right}
+.bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.step{display:flex;flex-direction:column;gap:24px;padding-top:28px}
+h1{font-family:var(--f-display);font-weight:600;font-size:clamp(2rem,6vw,2.6rem);line-height:1.08;margin:0;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:600;font-size:1.75rem;line-height:1.15;margin:0;text-wrap:balance}
+.lead{font-size:1.125rem;max-width:62ch}
+.muted{color:var(--ink-2)}
+.intro-list{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px;max-width:62ch}
+.sec-head{display:flex;flex-direction:column;gap:10px}
+.why{display:flex;flex-direction:column;gap:2px;color:var(--ink-2);max-width:62ch}
+.qs{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:28px}
+.q{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px}
+.qn{font-family:var(--f-mono);color:var(--accent);font-weight:500;padding-top:1px;font-size:.875rem}
+.qbody{display:flex;flex-direction:column;gap:8px;min-width:0}
+.qt{font-weight:600;line-height:1.4}
+.qh{font-size:.875rem;color:var(--ink-2);line-height:1.45}
+.req{font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-left:6px}
+.err{font-size:.875rem;color:var(--now)}
+textarea,input[type="text"]{width:100%;font:inherit;font-size:1rem;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+@media (min-width:800px){textarea,input[type="text"]{background:var(--paper)}}
+textarea{min-height:96px;resize:vertical;line-height:1.45}
+textarea::placeholder,input::placeholder{color:var(--ink-2);opacity:.8}
+textarea:focus-visible,input[type="text"]:focus-visible,button:focus-visible,.filebtn:focus-within{outline:2px solid var(--accent);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative}
+.chip input,.seg-opt input,.vh{position:absolute;opacity:0;width:1px;height:1px;overflow:hidden}
+.chip span{display:inline-block;padding:8px 13px;border:1px solid var(--line);border-radius:999px;font-size:.9375rem;line-height:1.3;cursor:pointer;background:var(--sheet)}
+.chip input:checked+span{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip input[type="checkbox"]:checked+span::before{content:"✓ "}
+.chip input:focus-visible+span,.seg-opt input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 16px}
+.legend div{display:flex;flex-direction:column;gap:4px;align-items:flex-start;font-size:.9375rem;color:var(--ink-2)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:.75rem;font-weight:500;padding:2px 9px;border-radius:999px;border:1px solid}
+.tag.now,.seg-opt.now input:checked+span{color:var(--now);background:var(--now-soft);border-color:var(--now)}
+.tag.next,.seg-opt.next input:checked+span{color:var(--next);background:var(--next-soft);border-color:var(--next)}
+.tag.space,.seg-opt.space input:checked+span{color:var(--space);background:var(--space-soft);border-color:var(--space)}
+.tag.skip,.seg-opt.skip input:checked+span{color:var(--skip);background:var(--skip-soft);border-color:var(--skip)}
+.seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.seg-opt{position:relative}
+.seg-opt span{display:block;font-family:var(--f-mono);font-size:.75rem;padding:8px 4px;border:1px solid var(--line);border-radius:4px;color:var(--ink-2);cursor:pointer;text-align:center}
+.files{display:flex;flex-direction:column;gap:10px}
+.filebtn{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font-weight:600;border:1.5px dashed var(--accent);color:var(--accent);border-radius:var(--r);padding:12px 18px;cursor:pointer;background:var(--accent-soft)}
+.filelist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.filelist:empty{display:none}
+.filelist li{display:flex;justify-content:space-between;gap:12px;padding-block:8px;border-bottom:1px solid var(--line);font-size:.9375rem}
+.filelist .fname{min-width:0;overflow-wrap:anywhere}
+.filelist .fstat{font-family:var(--f-mono);font-size:.75rem;color:var(--ink-2);white-space:nowrap}
+.fstat.ok{color:var(--ok)}.fstat.bad{color:var(--now)}
+.nav{display:flex;gap:10px;padding-top:8px;border-top:1px solid var(--line);margin-top:8px;padding-block:20px 0}
+.btn{font:inherit;font-weight:600;border-radius:var(--r);padding:13px 20px;cursor:pointer;border:1.5px solid var(--accent)}
+.btn.primary{background:var(--accent);color:var(--on-accent);flex:1}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn:disabled{opacity:.6;cursor:default}
+@media (min-width:600px){.btn.primary{flex:0 0 auto;min-width:200px}.nav{justify-content:space-between}}
+.savestate{font-family:var(--f-mono);font-size:.75rem;color:var(--ink-2);padding-top:16px;min-height:1.4em}
+.savestate.ok{color:var(--ok)}.savestate.warn{color:var(--warn)}
+.fallback{background:var(--accent-soft);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px}
+.fallback textarea{font-family:var(--f-mono);font-size:.8125rem;min-height:180px;background:var(--sheet)}
+.done-mark{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ok)}
+@media (prefers-reduced-motion:reduce){.bar span{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="sheet">
+  <header class="top">
+    <div class="top-row"><span class="eyebrow">Анкета · производство</span><span class="steplabel" id="steplabel">Начало</span></div>
+    <div class="bar" aria-hidden="true"><span id="bar"></span></div>
+  </header>
+  <main id="app"></main>
+  <div class="savestate" id="savestate" aria-live="polite"></div>
+</div>
+</div>
+
+<script>
+(function(){
+  var API = 'https://brief-api.supplier-watch.workers.dev';
+  var FORM = 'employee';
+  var KEY = 'anketa-employee-v1';
+  var VOICE = 'Можно голосовым в общий чат. Тогда напишите здесь «голосом».';
+  var PRIO = [{v:'Сейчас',c:'now'},{v:'Потом',c:'next'},{v:'Космос',c:'space'},{v:'Не нужно',c:'skip'}];
+
+  var SECTIONS = [
+    {title:'О вас', why:'Чтобы понимать, с какой стороны вы видите процесс.', qs:[
+      {id:'1.1', t:'Как вас зовут?', type:'short', req:true},
+      {id:'1.2', t:'Ваша должность', type:'short'},
+      {id:'1.3', t:'Чем занимаетесь в планировании?', type:'many', other:true, opts:['Принимаю заказы клиентов','Составляю план производства','Веду таблицы Excel с планом','Веду спецификации','Закупаю комплектующие','Веду склад','Руковожу цехом или участком']}
+    ]},
+    {title:'Продукт', why:'От того, сколько у вас моделей и вариантов, зависит, хватит ли простого решения или нужна серьёзная система.', qs:[
+      {id:'2.1', t:'Что выпускаете?', type:'many', other:true, opts:['Легковые прицепы','Грузовые прицепы и полуприцепы','Спецприцепы: для техники, лодок, лошадей','Кузова и надстройки','Запчасти на продажу']},
+      {id:'2.2', t:'Сколько базовых моделей в линейке?', type:'one', opts:['До 5','5–15','15–50','Больше 50','Не знаю']},
+      {id:'2.3', t:'Как часто прицеп делают с изменениями под клиента?', type:'one', opts:['Почти никогда, продаём стандартные модели','Клиент выбирает из готовых опций','Часто дорабатываем под клиента','Почти каждый прицеп уникальный']},
+      {id:'2.4', t:'Работаете под заказ или на склад?', type:'one', opts:['Только под заказ','В основном на склад','И так, и так']},
+      {id:'2.5', t:'Сколько уровней в спецификации?', hint:'Прицеп → рама → лонжерон → лист металла. Это 4 уровня.', type:'one', opts:['1–2: прицеп собирается сразу из деталей','3–4','5 и больше','Не знаю']},
+      {id:'2.6', t:'Какие операции делаете сами?', type:'many', other:true, opts:['Резка металла','Гибка','Сварка','Покраска','Цинкование','Сборка','Электрика','Борта, тент, обшивка']},
+      {id:'2.7', t:'Какие покупные комплектующие самые важные?', hint:'Например: оси, колёса, фаркопы, светотехника.', type:'long'}
+    ]},
+    {title:'Путь заказа', why:'Хотим увидеть процесс целиком и найти, где теряется время.', qs:[
+      {id:'3.1', t:'Опишите путь одного обычного заказа: от обращения клиента до отгрузки', hint:'Кто что делает и где это записывается. Проще всего голосовым на 3–5 минут в чат.', type:'long'},
+      {id:'3.2', t:'Сколько обычно проходит от заказа до отгрузки?', hint:'В днях или неделях.', type:'short'},
+      {id:'3.3', t:'Где чаще всего застревает?', type:'many', other:true, opts:['Ждём комплектующие от поставщиков','Поздно узнаём, что каких-то деталей не хватает','Узкое место на одном участке','Не хватает людей','Ошибки в спецификациях','Срочные заказы ломают план','Не знаю']},
+      {id:'3.4', t:'Вспомните последний прицеп, который отгрузили позже обещанного. Что случилось?', type:'long'},
+      {id:'3.5', t:'Как клиенту называют срок готовности?', type:'one', opts:['Считаем по наличию деталей и загрузке цеха','Примерно, по опыту','Один стандартный срок для всех','Не знаю']}
+    ]},
+    {title:'Excel', why:'Часто большая часть логики уже есть в таблицах. Важно её не потерять.', qs:[
+      {id:'4.1', t:'Какие таблицы вы используете для планирования?', hint:'Названия файлов и что в каждом. Сами файлы прикрепите в конце анкеты.', type:'long'},
+      {id:'4.2', t:'Сколько человек правят эти таблицы?', type:'one', opts:['1','2–3','4 и больше']},
+      {id:'4.3', t:'Где лежат файлы?', type:'one', other:true, opts:['На одном компьютере','В общей папке на сервере','В облаке: Яндекс Диск, Google Таблицы и т. п.','Пересылаем по почте или в мессенджере']},
+      {id:'4.4', t:'Что считается формулами, а что вписывается вручную?', type:'long'},
+      {id:'4.5', t:'Сколько времени в неделю уходит на эти таблицы?', type:'one', opts:['До 2 часов','2–5 часов','5–10 часов','Больше 10 часов','Не знаю']},
+      {id:'4.6', t:'Что в таблицах неудобнее всего?', type:'long'}
+    ]},
+    {title:'Спецификации', why:'Спецификация — это список, из чего состоит прицеп. Если она неточная, любая система будет считать неправильно.', qs:[
+      {id:'5.1', t:'Где хранятся спецификации?', type:'many', other:true, opts:['В 1С','В Excel','В чертежах: КОМПАС, SolidWorks, AutoCAD','На бумаге','В голове у мастера']},
+      {id:'5.2', t:'Кто их ведёт и меняет?', type:'short'},
+      {id:'5.3', t:'Как часто они меняются?', type:'one', opts:['Почти никогда','Раз в несколько месяцев','Каждый месяц','Почти с каждым заказом']},
+      {id:'5.4', t:'Насколько спецификация совпадает с тем, что реально идёт в прицеп?', type:'one', opts:['Совпадает','Есть мелкие расхождения','Сильно расходится','Не знаю']},
+      {id:'5.5', t:'Бывает, что деталь заменяют аналогом?', type:'one', opts:['Нет','Иногда, мастер решает на месте','Часто, есть список допустимых замен','Часто, но списка нет']},
+      {id:'5.6', t:'Как учитываете брак и отходы, например при раскрое металла?', type:'one', opts:['Никак','Закладываем процент на глаз','Считаем по нормам','Не знаю']}
+    ]},
+    {title:'Закупки и склад', why:'Дефициты и задержки чаще всего рождаются здесь.', qs:[
+      {id:'6.1', t:'Сколько примерно разных позиций закупаете?', type:'one', opts:['До 100','100–500','500–2000','Больше 2000','Не знаю']},
+      {id:'6.2', t:'Что везут дольше всего и сколько?', hint:'Например: оси, 6 недель; колёса, 3 недели.', type:'long'},
+      {id:'6.3', t:'Как решаете, что и когда заказать?', type:'one', other:true, opts:['Считаем потребность по плану и спецификациям','Смотрим остатки и заказываем, когда заканчивается','Держим запас по опыту','По-разному']},
+      {id:'6.4', t:'Поставщики привозят заказ частями?', type:'one', opts:['Почти всегда целиком','Бывает частями','Часто частями']},
+      {id:'6.5', t:'Как отслеживаете, что заказано и в пути?', type:'many', other:true, opts:['В 1С','В Excel','По почте и в мессенджерах','Держим в голове','Не отслеживаем']},
+      {id:'6.6', t:'Где ведутся остатки склада?', type:'one', opts:['В 1С','В Excel','И там, и там','Не ведём']},
+      {id:'6.7', t:'Насколько остатки в учёте совпадают с реальностью?', hint:'Ответьте как есть. Расхождения есть на большинстве заводов.', type:'one', opts:['Почти точно','Расходятся по мелочам','Часто сильно расходятся','Не знаю']},
+      {id:'6.8', t:'Есть ли промежуточный склад между участками?', hint:'Например, сваренные рамы ждут покраски.', type:'one', opts:['Да, и мы его учитываем','Да, но не учитываем','Нет']}
+    ]},
+    {title:'Производство', why:'Чтобы понять, хватит ли учёта материалов или нужно планировать ещё и загрузку людей и оборудования.', qs:[
+      {id:'7.1', t:'Какие участки проходит прицеп?', hint:'Например: резка → сварка → покраска → сборка.', type:'short'},
+      {id:'7.2', t:'Где узкое место?', hint:'Участок, который чаще всего тормозит остальных.', type:'short'},
+      {id:'7.3', t:'Как планируется работа в цеху?', type:'one', opts:['Есть план по дням','Есть план по неделям','Мастер решает утром','Как пойдёт']},
+      {id:'7.4', t:'Как узнаёте, что работа сделана?', type:'many', other:true, opts:['Мастер говорит','Записывают в журнал или тетрадь','Отмечают в Excel','Отмечают в 1С','Никак не фиксируется']},
+      {id:'7.5', t:'Бывает, что часть партии готова, а часть нет?', type:'one', opts:['Нет, делаем по одному прицепу','Бывает','Часто']}
+    ]},
+    {title:'1С:УНФ', why:'Если 1С уже закрывает часть задач, возможно, проще и дешевле развивать её.', qs:[
+      {id:'8.1', t:'Что ведёте в 1С?', type:'many', other:true, opts:['Заказы клиентов и продажи','Закупки','Склад','Производство','Бухгалтерию','Зарплату']},
+      {id:'8.2', t:'Пробовали вести производство в 1С:УНФ?', type:'one', opts:['Да, ведём','Пробовали и бросили','Не пробовали','Не знаю']},
+      {id:'8.3', t:'Почему не пошло?', type:'long', when:{id:'8.2', eq:'Пробовали и бросили'}},
+      {id:'8.4', t:'Кто дорабатывает 1С?', type:'one', opts:['Свой программист','Подрядчик','Никто','Не знаю']}
+    ]},
+    {title:'Сейчас, потом или космос', why:'Так станет видно, с чего начинать, а что не тащить в первый этап.', prio:true, qs:[
+      {id:'9.1', t:'Видеть заранее, каких деталей не хватит под заказы', type:'prio'},
+      {id:'9.2', t:'Считать, что и когда заказать у поставщиков', type:'prio'},
+      {id:'9.3', t:'Называть клиенту реальную дату готовности прицепа', type:'prio'},
+      {id:'9.4', t:'План производства по дням или неделям', type:'prio'},
+      {id:'9.5', t:'Видеть, что заказано и едет (транзиты)', type:'prio'},
+      {id:'9.6', t:'Загрузка участков и людей', type:'prio'},
+      {id:'9.7', t:'Замены и аналоги деталей', type:'prio'},
+      {id:'9.8', t:'Брак, отходы, раскрой металла', type:'prio'},
+      {id:'9.9', t:'Отметка «сделано» в цеху с планшета', type:'prio'},
+      {id:'9.10', t:'Штрихкоды и сканеры на складе', type:'prio'},
+      {id:'9.11', t:'Уведомления и сводка в телефоне для руководителя', type:'prio'},
+      {id:'9.12', t:'Всё в 1С, без двойного ввода', type:'prio'},
+      {id:'9.13', t:'Что ещё важно, чего нет в списке?', type:'long'}
+    ]},
+    {title:'Файлы и созвон', why:'Живой файл говорит больше любой анкеты. Ничего не нужно причёсывать.', qs:[
+      {id:'10.1', t:'Прикрепите файлы', hint:'Excel, по которому планируете; спецификацию одного прицепа; скриншот 1С, где ведёте заказы или склад. Можно фото с телефона.', type:'files'},
+      {id:'10.2', t:'Когда удобно созвониться на час?', hint:'Дни и время. Понадобится компьютер, чтобы показать экран.', type:'short'},
+      {id:'10.3', t:'Что ещё важно сказать?', type:'long'}
+    ]}
+  ];
+  var TOTAL = SECTIONS.length;
+  var DONE = TOTAL + 1;
+
+  // ---------- состояние ----------
+  function newId(){
+    try { return crypto.randomUUID(); } catch(e) { return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+  }
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e) {}
+  state.sid = state.sid || newId();
+  state.answers = state.answers || {};
+  state.files = state.files || [];
+  state.step = typeof state.step === 'number' ? state.step : 0;
+  function persist(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} }
+
+  function el(tag, cls, html){ var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function qid(id){ return 'q' + id.replace(/\./g, '-'); }
+
+  // ---------- разметка ----------
+  var app = document.getElementById('app');
+  var steps = [];
+
+  var intro = el('section', 'step');
+  intro.innerHTML =
+    '<h1>Как у нас планируется производство</h1>' +
+    '<p class="lead">Здравствуйте! Мы с Артёмом разбираемся, как упростить планирование производства. Хотим, чтобы было видно, каких деталей не хватит, что и когда заказать и когда реально будет готов прицеп.</p>' +
+    '<p class="muted" style="max-width:62ch">Вы лучше всех знаете, как всё устроено на самом деле. Анкета нужна, чтобы подобрать решение под ваш завод, а не под учебник.</p>' +
+    '<ul class="intro-list">' +
+      '<li>10 коротких разделов, 30–40 минут.</li>' +
+      '<li>Ответы сохраняются по ходу. Можно прерваться и вернуться с этого же телефона.</li>' +
+      '<li>Правильных ответов нет. «Не знаю» тоже полезный ответ.</li>' +
+      '<li>На длинные вопросы можно ответить голосовым в общем чате в Telegram.</li>' +
+      '<li>Файлы прикрепите в последнем разделе или пришлите в чат.</li>' +
+    '</ul>';
+  var introNav = el('div', 'nav');
+  var startBtn = el('button', 'btn primary', 'Начать');
+  startBtn.type = 'button';
+  startBtn.addEventListener('click', function(){ go(Math.max(1, state.furthest || 1)); });
+  introNav.appendChild(startBtn);
+  intro.appendChild(introNav);
+  steps.push(intro);
+
+  SECTIONS.forEach(function(s, i){
+    var sec = el('section', 'step');
+    var head = el('div', 'sec-head',
+      '<span class="eyebrow">Раздел ' + (i + 1) + ' из ' + TOTAL + '</span>' +
+      '<h2>' + s.title + '</h2>' +
+      '<p class="why"><span class="label">Зачем спрашиваем</span>' + s.why + '</p>');
+    sec.appendChild(head);
+    if (s.prio){
+      sec.appendChild(el('div', 'legend',
+        '<div><span class="tag now">Сейчас</span>Болит, теряем деньги</div>' +
+        '<div><span class="tag next">Потом</span>Следующий шаг, через 6–12 месяцев</div>' +
+        '<div><span class="tag space">Космос</span>Было бы здорово когда-нибудь</div>' +
+        '<div><span class="tag skip">Не нужно</span>Или непонятно, что это</div>'));
+    }
+    var ol = el('ol', 'qs');
+    s.qs.forEach(function(q){ ol.appendChild(question(q)); });
+    sec.appendChild(ol);
+
+    var nav = el('div', 'nav');
+    var back = el('button', 'btn ghost', 'Назад'); back.type = 'button';
+    back.addEventListener('click', function(){ go(i); });
+    nav.appendChild(back);
+    var last = i === TOTAL - 1;
+    var next = el('button', 'btn primary', last ? 'Отправить ответы' : 'Далее'); next.type = 'button';
+    next.addEventListener('click', function(){
+      if (!validate(s, sec)) return;
+      if (last) submitFinal(next, sec); else go(i + 2);
+    });
+    nav.appendChild(next);
+    sec.appendChild(nav);
+    steps.push(sec);
+  });
+
+  var done = el('section', 'step');
+  done.innerHTML = '<span class="done-mark">Отправлено</span><h2>Спасибо!</h2>' +
+    '<p class="lead">Ответы и файлы получены. Если что-то вспомните, можно вернуться, поправить и отправить ещё раз.</p>';
+  var doneNav = el('div', 'nav');
+  var editBtn = el('button', 'btn ghost', 'Изменить ответы'); editBtn.type = 'button';
+  editBtn.addEventListener('click', function(){ go(1); });
+  doneNav.appendChild(editBtn);
+  done.appendChild(doneNav);
+  steps.push(done);
+
+  steps.forEach(function(s){ app.appendChild(s); });
+
+  function question(q){
+    var li = el('li', 'q');
+    var id = qid(q.id);
+    if (q.when){ li.dataset.whenId = q.when.id; li.dataset.whenEq = q.when.eq; }
+    var html = '<span class="qn">' + q.id + '</span><div class="qbody">';
+    var isText = q.type === 'short' || q.type === 'long';
+    html += (isText ? '<label class="qt" for="' + id + '" id="' + id + '-l">' : '<span class="qt" id="' + id + '-l">') +
+      q.t + (q.req ? '<span class="req">обязательно</span>' : '') + (isText ? '</label>' : '</span>');
+    if (q.hint) html += '<span class="qh">' + q.hint + '</span>';
+    if (q.type === 'short') html += '<input type="text" id="' + id + '" data-q="' + q.id + '" autocomplete="off">';
+    if (q.type === 'long') html += '<textarea id="' + id + '" data-q="' + q.id + '" placeholder="' + VOICE + '"></textarea>';
+    if (q.type === 'one' || q.type === 'many'){
+      var kind = q.type === 'one' ? 'radio' : 'checkbox';
+      html += '<div class="chips" role="' + (kind === 'radio' ? 'radiogroup' : 'group') + '" aria-labelledby="' + id + '-l">';
+      var opts = q.opts.slice(); if (q.other) opts.push('__other');
+      opts.forEach(function(o, k){
+        html += '<label class="chip"><input type="' + kind + '" name="' + id + '" id="' + id + '-' + k + '" value="' + o + '" data-q="' + q.id + '"><span>' + (o === '__other' ? 'Другое' : o) + '</span></label>';
+      });
+      html += '</div>';
+      if (q.other) html += '<input type="text" id="' + id + '-other" data-other="' + q.id + '" placeholder="Ваш вариант" aria-label="Ваш вариант" hidden>';
+    }
+    if (q.type === 'prio'){
+      html += '<div class="seg" role="radiogroup" aria-labelledby="' + id + '-l">';
+      PRIO.forEach(function(p, k){
+        html += '<label class="seg-opt ' + p.c + '"><input type="radio" name="' + id + '" id="' + id + '-' + k + '" value="' + p.v + '" data-q="' + q.id + '"><span>' + p.v + '</span></label>';
+      });
+      html += '</div>';
+    }
+    if (q.type === 'files'){
+      html += '<div class="files">' +
+        '<label class="filebtn" for="file-input">Выбрать файлы<input type="file" id="file-input" class="vh" multiple></label>' +
+        '<ul class="filelist" id="filelist"></ul>' +
+        '<span class="qh">До 25 МБ каждый. Если файл больше или не загружается, пришлите его в общий чат в Telegram.</span>' +
+        '</div>';
+    }
+    html += '<span class="err" id="' + id + '-err" hidden></span></div>';
+    li.innerHTML = html;
+    return li;
+  }
+
+  // ---------- заполнение из сохранённого ----------
+  function hydrate(){
+    Object.keys(state.answers).forEach(function(key){
+      var v = state.answers[key];
+      if (/__other$/.test(key)){
+        var o = document.querySelector('[data-other="' + key.replace(/__other$/, '') + '"]');
+        if (o) o.value = v;
+        return;
+      }
+      var inputs = document.querySelectorAll('[data-q="' + key + '"]');
+      inputs.forEach(function(inp){
+        if (inp.type === 'radio') inp.checked = inp.value === v;
+        else if (inp.type === 'checkbox') inp.checked = Array.isArray(v) && v.indexOf(inp.value) !== -1;
+        else inp.value = v;
+      });
+      showOther(key);
+    });
+    state.files.forEach(function(f){ addFileRow(f.name, 'загружен', 'ok'); });
+    applyConditions();
+  }
+
+  function showOther(id){
+    var o = document.querySelector('[data-other="' + id + '"]');
+    if (!o) return;
+    var v = state.answers[id];
+    o.hidden = !(v === '__other' || (Array.isArray(v) && v.indexOf('__other') !== -1));
+  }
+  function applyConditions(){
+    document.querySelectorAll('[data-when-id]').forEach(function(li){
+      li.hidden = state.answers[li.dataset.whenId] !== li.dataset.whenEq;
+    });
+  }
+
+  function onInput(e){
+    var t = e.target;
+    if (t.id === 'file-input') return;
+    if (t.dataset.q){
+      var id = t.dataset.q;
+      if (t.type === 'checkbox'){
+        var arr = (state.answers[id] || []).filter(function(x){ return x !== t.value; });
+        if (t.checked) arr.push(t.value);
+        state.answers[id] = arr;
+      } else state.answers[id] = t.value;
+      showOther(id);
+      var err = document.getElementById(qid(id) + '-err'); if (err) err.hidden = true;
+    } else if (t.dataset.other) {
+      state.answers[t.dataset.other + '__other'] = t.value;
+    } else return;
+    applyConditions();
+    dirty = true;
+    persist();
+  }
+  app.addEventListener('input', onInput);
+  app.addEventListener('change', onInput);
+
+  function validate(s, sec){
+    var ok = true;
+    s.qs.forEach(function(q){
+      if (!q.req) return;
+      var v = (state.answers[q.id] || '').trim();
+      var err = document.getElementById(qid(q.id) + '-err');
+      if (!v){ err.textContent = 'Заполните, пожалуйста, это поле.'; err.hidden = false; if (ok) document.getElementById(qid(q.id)).focus(); ok = false; }
+    });
+    return ok;
+  }
+
+  // ---------- навигация ----------
+  var bar = document.getElementById('bar');
+  var stepLabel = document.getElementById('steplabel');
+  function show(){
+    steps.forEach(function(s, i){ s.hidden = i !== state.step; });
+    var st = state.step;
+    if (st === 0){ stepLabel.textContent = 'Начало'; bar.style.width = '0%'; startBtn.textContent = state.furthest > 1 ? 'Продолжить' : 'Начать'; }
+    else if (st === DONE){ stepLabel.textContent = 'Готово'; bar.style.width = '100%'; }
+    else { stepLabel.textContent = st + ' из ' + TOTAL; bar.style.width = ((st - 1) / TOTAL * 100) + '%'; }
+  }
+  function go(n){
+    state.step = n;
+    if (n <= TOTAL) state.furthest = Math.max(state.furthest || 1, n);
+    persist();
+    show();
+    window.scrollTo(0, 0);
+    if (dirty) sync(false);
+  }
+
+  // ---------- отправка ----------
+  var dirty = Object.keys(state.answers).length > 0 && !state.sent; // черновик мог не дойти до сервера
+  var saveState = document.getElementById('savestate');
+  function setSave(kind){
+    var time = new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
+    saveState.className = 'savestate ' + (kind === 'ok' ? 'ok' : kind === 'local' ? 'warn' : '');
+    saveState.textContent = kind === 'ok' ? 'Ответы сохранены · ' + time
+      : kind === 'local' ? 'Нет связи с сервером. Ответы сохранены на этом телефоне, отправим позже.'
+      : 'Сохраняю…';
+  }
+
+  function readable(){
+    var out = [];
+    SECTIONS.forEach(function(s){
+      s.qs.forEach(function(q){
+        if (q.type === 'files') return;
+        if (q.when && state.answers[q.when.id] !== q.when.eq) return;
+        var a = state.answers[q.id];
+        var other = (state.answers[q.id + '__other'] || '').trim();
+        if (Array.isArray(a)) a = a.map(function(v){ return v === '__other' ? 'Другое: ' + other : v; });
+        else if (a === '__other') a = 'Другое: ' + other;
+        out.push({id: q.id, section: s.title, q: q.t, a: a == null ? '' : a});
+      });
+    });
+    return out;
+  }
+
+  function post(path, body, contentType, timeoutMs){
+    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, timeoutMs) : null;
+    return fetch(API + path, {method: 'POST', headers: {'Content-Type': contentType}, body: body, signal: ctrl ? ctrl.signal : undefined})
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .finally(function(){ if (timer) clearTimeout(timer); });
+  }
+
+  function sync(final){
+    setSave('pending');
+    var body = JSON.stringify({answers: state.answers, readable: readable(), files: state.files, final: !!final});
+    // text/plain — «простой» запрос, без preflight
+    return post('/submit?form=' + FORM + '&sid=' + state.sid, body, 'text/plain;charset=UTF-8', 20000)
+      .then(function(){ dirty = false; setSave('ok'); return true; })
+      .catch(function(){ setSave('local'); return false; });
+  }
+
+  function plainText(){
+    var lines = ['Анкета: планирование производства', ''];
+    readable().forEach(function(r){
+      var a = Array.isArray(r.a) ? r.a.join('; ') : r.a;
+      lines.push(r.id + ' ' + r.q, '— ' + (a || '—'), '');
+    });
+    return lines.join('\n');
+  }
+
+  function submitFinal(btn, sec){
+    btn.disabled = true; btn.textContent = 'Отправляю…';
+    sync(true).then(function(ok){
+      btn.disabled = false; btn.textContent = 'Отправить ответы';
+      if (ok){ state.sent = true; persist(); go(DONE); return; }
+      var fb = sec.querySelector('.fallback');
+      if (!fb){
+        fb = el('div', 'fallback',
+          '<b>Не получилось отправить</b>' +
+          '<p>Ответы сохранены на этом телефоне. Попробуйте ещё раз чуть позже. Если снова не выйдет, скопируйте ответы и вставьте их в общий чат в Telegram.</p>' +
+          '<button type="button" class="btn ghost" style="align-self:flex-start">Скопировать ответы</button>' +
+          '<textarea readonly aria-label="Ответы текстом"></textarea>' +
+          '<span class="qh" aria-live="polite"></span>');
+        sec.insertBefore(fb, sec.querySelector('.nav'));
+        var ta = fb.querySelector('textarea'), note = fb.querySelector('.qh');
+        fb.querySelector('button').addEventListener('click', function(){
+          ta.value = plainText();
+          function manual(){ ta.focus(); ta.select(); try { ta.setSelectionRange(0, ta.value.length); } catch(e) {} note.textContent = 'Текст выделен, скопируйте его вручную.'; }
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(function(){ note.textContent = 'Скопировано. Вставьте в общий чат.'; }, manual);
+            else manual();
+          } catch(e) { manual(); }
+        });
+      }
+      fb.querySelector('textarea').value = plainText();
+    });
+  }
+
+  // ---------- файлы ----------
+  var MAX = 25 * 1024 * 1024;
+  var list = document.getElementById('filelist');
+  function addFileRow(name, status, cls){
+    var li = el('li');
+    var n = el('span', 'fname'); n.textContent = name;
+    var s = el('span', 'fstat ' + (cls || '')); s.textContent = status;
+    li.appendChild(n); li.appendChild(s); list.appendChild(li);
+    return s;
+  }
+  document.getElementById('file-input').addEventListener('change', function(e){
+    Array.prototype.forEach.call(e.target.files, function(file){
+      if (file.size > MAX){ addFileRow(file.name, 'больше 25 МБ, пришлите в чат', 'bad'); return; }
+      var st = addFileRow(file.name, 'загружаю…');
+      var q = '/upload?form=' + FORM + '&sid=' + state.sid + '&name=' + encodeURIComponent(file.name) + '&type=' + encodeURIComponent(file.type || 'application/octet-stream');
+      post(q, file, 'text/plain', 180000).then(function(r){
+        st.textContent = 'загружен'; st.className = 'fstat ok';
+        state.files.push({id: r.id, name: file.name, size: file.size});
+        persist(); dirty = true; sync(false);
+      }).catch(function(){
+        st.textContent = 'не загрузился, пришлите в чат'; st.className = 'fstat bad';
+      });
+    });
+    e.target.value = '';
+  });
+
+  hydrate();
+  if (state.step > DONE) state.step = 0;
+  show();
+})();
+</script>
+</body>
+</html>
