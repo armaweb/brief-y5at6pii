@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Как пройдёт обследование, выбор глубины и 9 вопросов. Около 10 минут.">
+<meta property="og:title" content="С чего начнём планирование производства">
+<meta property="og:description" content="Как пройдёт обследование, выбор глубины и 9 вопросов. Около 10 минут.">
+<meta property="og:type" content="website">
+<style>body{margin:0}</style>
+<title>Планирование производства прицепов</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: одна колонка-документ, как лист ТЗ; в конце штамп по образцу чертёжного */
+:root{
+  --paper:#EEF1F4; --sheet:#FFFFFF; --ink:#17212C; --ink-2:#4E5B69; --line:#D3DAE2;
+  --accent:#1D4F91; --accent-soft:#E5ECF6; --on-accent:#FFFFFF;
+  --now:#B83227; --now-soft:#FBE8E5;
+  --next:#9A6210; --next-soft:#FBF0DC;
+  --space:#5A43AE; --space-soft:#EDE9FA;
+  --skip:#6F7C89; --skip-soft:#EBEFF3;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1318; --sheet:#151C24; --ink:#E5EAF0; --ink-2:#A1ADBA; --line:#2B3541;
+    --accent:#86ACE6; --accent-soft:#1A2940; --on-accent:#0E1318;
+    --now:#F0806F; --now-soft:#3A1D1A;
+    --next:#E2AA4E; --next-soft:#352812;
+    --space:#AB98F2; --space-soft:#251F40;
+    --skip:#95A2AF; --skip-soft:#212A33;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1318; --sheet:#151C24; --ink:#E5EAF0; --ink-2:#A1ADBA; --line:#2B3541;
+  --accent:#86ACE6; --accent-soft:#1A2940; --on-accent:#0E1318;
+  --now:#F0806F; --now-soft:#3A1D1A;
+  --next:#E2AA4E; --next-soft:#352812;
+  --space:#AB98F2; --space-soft:#251F40;
+  --skip:#95A2AF; --skip-soft:#212A33;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--sheet);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+.wrap{max-width:780px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+.sheet{display:flex;flex-direction:column;gap:48px}
+@media (min-width:800px){
+  body{background:var(--paper)}
+  .wrap{padding-block:40px 64px}
+  .sheet{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:52px 60px}
+}
+p{margin:0}
+section,header{display:flex;flex-direction:column;gap:16px}
+.eyebrow,.label{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+h1{font-family:var(--f-display);font-weight:600;font-size:clamp(2rem,6vw,2.75rem);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-family:var(--f-display);font-weight:600;font-size:1.625rem;line-height:1.15;margin:0;text-wrap:balance}
+.lead{font-size:1.1875rem;line-height:1.5;max-width:62ch}
+.muted{color:var(--ink-2)}
+.prose{max-width:64ch}
+
+/* четыре направления */
+.dirs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.dir{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.dir b{font-weight:600}
+.dir span{color:var(--ink-2);font-size:.9375rem;line-height:1.45}
+@media (max-width:540px){.dirs{grid-template-columns:minmax(0,1fr)}}
+
+/* шаги */
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.step{display:grid;grid-template-columns:36px minmax(0,1fr);gap:14px;padding-block:14px;border-top:1px solid var(--line)}
+.step:last-child{border-bottom:1px solid var(--line)}
+.num{font-family:var(--f-mono);font-weight:500;width:30px;height:30px;border:1.5px solid var(--accent);color:var(--accent);display:grid;place-items:center;border-radius:4px;font-size:.875rem}
+.step b{display:block;font-weight:600}
+.meta{font-family:var(--f-mono);font-size:.8125rem;color:var(--ink-2);margin-top:4px}
+
+/* глубина */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:720px){.cards{grid-template-columns:minmax(0,1fr)}}
+.card{position:relative;display:flex;flex-direction:column;gap:12px;border:1.5px solid var(--line);border-radius:var(--r);padding:16px;cursor:pointer;background:var(--sheet);min-width:0}
+.card:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.card:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.card input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-name{font-family:var(--f-display);font-weight:600;font-size:1.3125rem;line-height:1.1}
+.dot{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--ink-2);flex:none}
+.card:has(input:checked) .dot{border:5px solid var(--accent)}
+.badge{font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.kv{margin:0;display:flex;flex-direction:column;gap:10px}
+.kv div{display:flex;flex-direction:column;gap:1px}
+.kv dt{font-family:var(--f-mono);font-size:.6875rem;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-2)}
+.kv dd{margin:0;font-size:.9375rem;line-height:1.45}
+
+/* приоритеты */
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 16px}
+.legend div{display:flex;flex-direction:column;gap:4px;align-items:flex-start;font-size:.9375rem;color:var(--ink-2)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:.75rem;font-weight:500;padding:2px 9px;border-radius:999px;border:1px solid}
+.tag.now,.seg-opt.now input:checked+span{color:var(--now);background:var(--now-soft);border-color:var(--now)}
+.tag.next,.seg-opt.next input:checked+span{color:var(--next);background:var(--next-soft);border-color:var(--next)}
+.tag.space,.seg-opt.space input:checked+span{color:var(--space);background:var(--space-soft);border-color:var(--space)}
+.tag.skip,.seg-opt.skip input:checked+span{color:var(--skip);background:var(--skip-soft);border-color:var(--skip)}
+.subhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:8px}
+.subhead b{font-weight:600}
+.matrix{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.prow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 16px;align-items:center;padding-block:10px;border-bottom:1px solid var(--line)}
+.plabel{font-size:.9375rem;line-height:1.4}
+.seg{display:flex;gap:4px}
+.seg-opt{position:relative}
+.seg-opt input{position:absolute;opacity:0;width:1px;height:1px}
+.seg-opt span{display:block;font-family:var(--f-mono);font-size:.75rem;padding:6px 8px;border:1px solid var(--line);border-radius:4px;color:var(--ink-2);cursor:pointer;min-width:66px;text-align:center}
+@media (max-width:620px){
+  .prow{grid-template-columns:minmax(0,1fr)}
+  .seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+  .seg-opt span{min-width:0}
+}
+
+/* вопросы */
+.qs{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:28px}
+.q{display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px}
+.qn{font-family:var(--f-mono);color:var(--accent);font-weight:500;padding-top:1px}
+.qbody{display:flex;flex-direction:column;gap:8px;min-width:0}
+.qt{font-weight:600;line-height:1.4}
+.qh{font-size:.875rem;color:var(--ink-2);line-height:1.45}
+textarea,input[type="text"]{width:100%;font:inherit;font-size:1rem;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+textarea{min-height:80px;resize:vertical;line-height:1.45}
+textarea:focus-visible,input[type="text"]:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;width:1px;height:1px}
+.chip span{display:inline-block;padding:7px 13px;border:1px solid var(--line);border-radius:999px;font-size:.9375rem;line-height:1.3;cursor:pointer;background:var(--sheet)}
+.chip input:checked+span{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip input:focus-visible+span,.seg-opt input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mini{display:flex;flex-direction:column;justify-content:flex-end;gap:4px;font-size:.8125rem;color:var(--ink-2);line-height:1.3;min-width:0}
+.sublabel{font-size:.8125rem;color:var(--ink-2);margin-top:4px}
+
+/* сотрудник */
+.needs{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:720px){.needs{grid-template-columns:minmax(0,1fr);gap:16px}}
+.needs li{display:flex;flex-direction:column;gap:4px;min-width:0}
+.needs b{font-weight:600}
+.needs span{font-size:.9375rem;color:var(--ink-2);line-height:1.5}
+.chat{border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+.chat b{font-weight:600}
+
+/* отправка */
+.send{background:var(--accent-soft);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:14px}
+.copy{font:inherit;font-weight:600;background:var(--accent);color:var(--on-accent);border:0;border-radius:var(--r);padding:12px 20px;cursor:pointer;align-self:flex-start}
+#status{font-size:.875rem;color:var(--ink);min-height:1.3em}
+#out{font-family:var(--f-mono);font-size:.8125rem;background:var(--sheet);min-height:220px}
+
+/* штамп */
+.stamp-wrap{overflow-x:auto}
+.stamp{width:100%;border-collapse:collapse;font-family:var(--f-mono);font-size:.75rem;color:var(--ink-2)}
+.stamp td{border:1px solid var(--ink-2);padding:6px 8px;vertical-align:top}
+.stamp .k{font-size:.625rem;text-transform:uppercase;letter-spacing:.07em;display:block}
+.stamp .v{color:var(--ink);font-size:.8125rem}
+.stamp .big{font-family:var(--f-display);font-size:1.0625rem;color:var(--ink);font-weight:600;line-height:1.2}
+@media (prefers-reduced-motion:no-preference){.card,.chip span,.seg-opt span{transition:background-color .15s,border-color .15s,color .15s}}
+
+/* PDF-версия: A5, читается с телефона без зума */
+.print-only{display:none}
+@page{size:148mm 210mm;margin:12mm 11mm}
+@media print{
+  :root:root:root{
+    --paper:#EEF1F4; --sheet:#FFFFFF; --ink:#17212C; --ink-2:#4E5B69; --line:#D3DAE2;
+    --accent:#1D4F91; --accent-soft:#E5ECF6; --on-accent:#FFFFFF;
+    --now:#B83227; --now-soft:#FBE8E5; --next:#9A6210; --next-soft:#FBF0DC;
+    --space:#5A43AE; --space-soft:#EDE9FA; --skip:#6F7C89; --skip-soft:#EBEFF3;
+    color-scheme:light;
+  }
+  body{background:var(--sheet);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .wrap{padding:0;max-width:none}
+  .sheet{gap:30px;border:0;padding:0;background:var(--sheet)}
+  .screen-only,textarea,input[type="text"],.trio,.seg{display:none!important}
+  .print-only{display:block}
+  .send.print-only{display:flex}
+  .prow{grid-template-columns:minmax(0,1fr);padding-block:7px}
+  .cards,.needs{grid-template-columns:minmax(0,1fr)}
+  .card .kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .stamp-wrap{overflow:visible;padding-right:1px}
+  .card,.step,.prow,.q,.needs li,.dir,.chat,.legend,.send,.stamp-wrap{break-inside:avoid}
+  h2,.subhead{break-after:avoid}
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<main class="sheet">
+
+<header>
+  <div class="eyebrow">Бриф для Артёма · 14 октября 2026</div>
+  <h1>С чего начнём планирование производства</h1>
+  <p class="lead">Сейчас производство планируется в Excel. Задача в том, чтобы система сама показывала, каких деталей не хватит, что и когда заказать и когда реально будет готов прицеп.</p>
+  <p class="prose muted">Инструмент пока не выбираем. Сначала разберёмся, как всё устроено у вас сейчас и что важнее всего. По итогу подойдёт одно из четырёх направлений:</p>
+  <div class="dirs">
+    <div class="dir"><b>Доработать 1С:УНФ</b><span>Данные уже там, обмены не нужны. Планирование базовое.</span></div>
+    <div class="dir"><b>Прокачать Excel</b><span>Быстро и недорого. Подходит, пока объёмы небольшие.</span></div>
+    <div class="dir"><b>Готовая система</b><span>Расчёты уже есть. Платная подписка и обмен с 1С.</span></div>
+    <div class="dir"><b>Своя разработка</b><span>Точно под ваши процессы. Дороже в создании и поддержке.</span></div>
+  </div>
+</header>
+
+<section>
+  <h2>Как будем работать</h2>
+  <ol class="steps">
+    <li class="step"><span class="num">1</span><div><b>Вы отвечаете на вопросы и выбираете глубину</b><div class="meta">Артём · 10 минут · вопросы ниже</div></div></li>
+    <li class="step"><span class="num">2</span><div><b>Сотрудник заполняет анкету и присылает файлы</b><p class="muted">Анкета в Яндекс Форме, открывается с телефона.</p><div class="meta">Сотрудник · 30–40 минут · для «Стандарт» и «Глубоко»</div></div></li>
+    <li class="step"><span class="num">3</span><div><b>Созвон на час</b><p class="muted">Сотрудник показывает на экране, как всё устроено сейчас.</p><div class="meta">Сотрудник, Артём по желанию · 1 час</div></div></li>
+    <li class="step"><span class="num">4</span><div><b>Итог на одной странице</b><p class="muted">Как я понял процесс, 2–3 варианта с ценой и сроками, что делать первым. Вы правите, я уточняю.</p><div class="meta">От меня</div></div></li>
+  </ol>
+</section>
+
+<section>
+  <h2>Выберите глубину</h2>
+  <p class="prose muted">От неё зависит, сколько времени уйдёт у вас и насколько подробным будет результат. Можно начать с экспресса и углубиться потом.</p>
+  <div class="cards" role="radiogroup" aria-label="Глубина">
+    <label class="card">
+      <input type="radio" name="depth" id="depth-express" value="Экспресс">
+      <div class="card-top"><span class="card-name">Экспресс</span><span class="dot"></span></div>
+      <dl class="kv">
+        <div><dt>Что делаем</dt><dd>Только вопросы из этого брифа</dd></div>
+        <div><dt>Ваше время</dt><dd>10 минут</dd></div>
+        <div><dt>Что получите</dt><dd>Какое из четырёх направлений вам подходит и почему</dd></div>
+      </dl>
+    </label>
+    <label class="card">
+      <input type="radio" name="depth" id="depth-standard" value="Стандарт">
+      <div class="card-top"><span class="card-name">Стандарт</span><span class="dot"></span></div>
+      <span class="badge">Обычно достаточно</span>
+      <dl class="kv">
+        <div><dt>Что делаем</dt><dd>Вопросы, анкета сотрудника, файлы, созвон</dd></div>
+        <div><dt>Ваше время</dt><dd>Около 2 часов</dd></div>
+        <div><dt>Что получите</dt><dd>Схему процесса как есть, 2–3 варианта с вилкой цены и сроков, первый шаг</dd></div>
+      </dl>
+    </label>
+    <label class="card">
+      <input type="radio" name="depth" id="depth-deep" value="Глубоко">
+      <div class="card-top"><span class="card-name">Глубоко</span><span class="dot"></span></div>
+      <dl class="kv">
+        <div><dt>Что делаем</dt><dd>Плюс выгрузки из 1С, 2–3 созвона или выезд</dd></div>
+        <div><dt>Ваше время</dt><dd>5–8 часов за 1–2 недели</dd></div>
+        <div><dt>Что получите</dt><dd>ТЗ на первый этап, которое можно отдать подрядчикам на оценку</dd></div>
+      </dl>
+    </label>
+  </div>
+</section>
+
+<section>
+  <h2>Сейчас, потом или космос</h2>
+  <p class="prose muted">Всё, что может делать система, разложим по четырём полкам. Так видно, с чего начинать и что не тащить в первый этап.</p>
+  <div class="legend">
+    <div><span class="tag now">Сейчас</span>Болит, теряем деньги</div>
+    <div><span class="tag next">Потом</span>Следующий шаг, через 6–12 месяцев</div>
+    <div><span class="tag space">Космос</span>Было бы здорово когда-нибудь</div>
+    <div><span class="tag skip">Нет</span>Не нужно или непонятно, что это</div>
+  </div>
+  <div class="subhead"><b>Ваш взгляд</b><span class="label">Необязательно</span></div>
+  <p class="prose muted screen-only">Сотрудник отметит это в анкете. Если отметите сами, сравним взгляд собственника и взгляд с производства. Расхождения обычно показывают главное.</p>
+  <p class="prose muted print-only">Сотрудник отметит это в анкете. Если хотите, напишите в чат свой взгляд: какие пункты для вас «сейчас», а какие «космос». Сравним с ответами с производства. Расхождения обычно показывают главное.</p>
+  <div class="matrix" id="matrix"></div>
+</section>
+
+<section>
+  <h2>Вопросы к вам</h2>
+  <p class="prose muted screen-only">Около 10 минут, можно коротко. Если не хочется печатать, ответьте голосовыми в Telegram и назовите номер вопроса.</p>
+  <p class="prose muted print-only">Около 10 минут, можно коротко. Ответьте в Telegram текстом или голосовыми, называя номер вопроса.</p>
+  <ol class="qs">
+    <li class="q"><span class="qn">1</span><div class="qbody">
+      <label class="qt" for="q1">Что сейчас болит сильнее всего?</label>
+      <span class="qh">Опишите последний случай: что произошло и чем закончилось.</span>
+      <textarea id="q1"></textarea>
+    </div></li>
+    <li class="q"><span class="qn">2</span><div class="qbody">
+      <label class="qt" for="q2">Почему занялись этим именно сейчас?</label>
+      <span class="qh">Что случилось? И что будет через 3 месяца, если ничего не менять?</span>
+      <textarea id="q2"></textarea>
+    </div></li>
+    <li class="q"><span class="qn">3</span><div class="qbody">
+      <label class="qt" for="q3">Во что это обходится?</label>
+      <span class="qh">Например, сколько раз за квартал прицеп задерживался из-за нехватки деталей или сколько денег лежит на складе без движения. Можно примерно.</span>
+      <textarea id="q3"></textarea>
+    </div></li>
+    <li class="q"><span class="qn">4</span><div class="qbody">
+      <label class="qt" for="q4">Как через полгода поймёте, что всё получилось?</label>
+      <span class="qh">1–2 признака. Например, отгрузки не срываются, а закупщик не сидит вечерами над таблицей.</span>
+      <textarea id="q4"></textarea>
+    </div></li>
+    <li class="q"><span class="qn">5</span><div class="qbody">
+      <span class="qt">Масштаб</span>
+      <span class="qh screen-only">Можно примерно.</span>
+      <span class="qh print-only">Прицепов в месяц, моделей, человек на производстве. Можно примерно.</span>
+      <div class="trio">
+        <label class="mini" for="q5a">Прицепов в месяц<input type="text" id="q5a" inputmode="numeric"></label>
+        <label class="mini" for="q5b">Моделей<input type="text" id="q5b" inputmode="numeric"></label>
+        <label class="mini" for="q5c">Человек на производстве<input type="text" id="q5c" inputmode="numeric"></label>
+      </div>
+    </div></li>
+    <li class="q"><span class="qn">6</span><div class="qbody">
+      <span class="qt" id="q6l">Насколько срочно?</span>
+      <div class="chips" role="radiogroup" aria-labelledby="q6l">
+        <label class="chip"><input type="radio" name="q6" id="q6-1" value="Горит, нужно за 1–2 месяца"><span>Горит, нужно за 1–2 месяца</span></label>
+        <label class="chip"><input type="radio" name="q6" id="q6-2" value="В этом году"><span>В этом году</span></label>
+        <label class="chip"><input type="radio" name="q6" id="q6-3" value="Не горит, хотим сделать правильно"><span>Не горит, хотим сделать правильно</span></label>
+      </div>
+    </div></li>
+    <li class="q"><span class="qn">7</span><div class="qbody">
+      <span class="qt" id="q7l">Бюджет на первый этап</span>
+      <span class="qh">Вилка нужна, чтобы не предлагать лишнего.</span>
+      <div class="chips" role="radiogroup" aria-labelledby="q7l">
+        <label class="chip"><input type="radio" name="q7" id="q7-1" value="До 300 тыс ₽"><span>До 300 тыс ₽</span></label>
+        <label class="chip"><input type="radio" name="q7" id="q7-2" value="300 тыс – 1 млн ₽"><span>300 тыс – 1 млн ₽</span></label>
+        <label class="chip"><input type="radio" name="q7" id="q7-3" value="1–3 млн ₽"><span>1–3 млн ₽</span></label>
+        <label class="chip"><input type="radio" name="q7" id="q7-4" value="Больше 3 млн ₽"><span>Больше 3 млн ₽</span></label>
+        <label class="chip"><input type="radio" name="q7" id="q7-5" value="Не знаю, помогите оценить"><span>Не знаю, помогите оценить</span></label>
+      </div>
+    </div></li>
+    <li class="q"><span class="qn">8</span><div class="qbody">
+      <span class="qt" id="q8l">Есть предпочтение по решению?</span>
+      <div class="chips" role="radiogroup" aria-labelledby="q8l">
+        <label class="chip"><input type="radio" name="q8" id="q8-1" value="Доработать 1С"><span>Доработать 1С</span></label>
+        <label class="chip"><input type="radio" name="q8" id="q8-2" value="Прокачать Excel"><span>Прокачать Excel</span></label>
+        <label class="chip"><input type="radio" name="q8" id="q8-3" value="Готовая система"><span>Готовая система</span></label>
+        <label class="chip"><input type="radio" name="q8" id="q8-4" value="Своя разработка"><span>Своя разработка</span></label>
+        <label class="chip"><input type="radio" name="q8" id="q8-5" value="Нет, помогите выбрать"><span>Нет, помогите выбрать</span></label>
+      </div>
+    </div></li>
+    <li class="q"><span class="qn">9</span><div class="qbody">
+      <label class="qt" for="q9a">Кто будет отвечать с вашей стороны?</label>
+      <span class="qh print-only">Имя и должность.</span>
+      <input type="text" id="q9a" placeholder="Имя и должность">
+      <span class="sublabel" id="q9bl">Сколько времени в неделю сможет уделять</span>
+      <div class="chips" role="radiogroup" aria-labelledby="q9bl">
+        <label class="chip"><input type="radio" name="q9b" id="q9b-1" value="1–2 часа"><span>1–2 часа</span></label>
+        <label class="chip"><input type="radio" name="q9b" id="q9b-2" value="3–5 часов"><span>3–5 часов</span></label>
+        <label class="chip"><input type="radio" name="q9b" id="q9b-3" value="Больше 5 часов"><span>Больше 5 часов</span></label>
+      </div>
+      <span class="sublabel" id="q9cl">Можно писать сотруднику напрямую?</span>
+      <div class="chips" role="radiogroup" aria-labelledby="q9cl">
+        <label class="chip"><input type="radio" name="q9c" id="q9c-1" value="Да"><span>Да</span></label>
+        <label class="chip"><input type="radio" name="q9c" id="q9c-2" value="Лучше через Артёма"><span>Лучше через Артёма</span></label>
+      </div>
+    </div></li>
+  </ol>
+</section>
+
+<section>
+  <h2>Что понадобится от сотрудника</h2>
+  <p class="muted">Для уровней «Стандарт» и «Глубоко».</p>
+  <ul class="needs">
+    <li><b>Анкета в Яндекс Форме</b><span>30–40 минут с телефона. В каждом блоке написано, зачем он нужен. На любой вопрос можно ответить «не знаю».</span></li>
+    <li><b>Файлы как есть</b><span>Excel, по которому планируете, спецификация одного прицепа, скриншот 1С. Ничего не нужно причёсывать. По живому файлу видно больше, чем по любой анкете.</span></li>
+    <li><b>Созвон на час</b><span>С показом экрана. Время выберем в чате.</span></li>
+  </ul>
+  <div class="chat">
+    <b>Где общаемся</b>
+    <span class="muted">Общий чат в Telegram: Артём, сотрудник и я. Там вопросы, файлы и голосовые. Сотрудник пишет мне напрямую, и ничего не теряется по дороге.</span>
+  </div>
+</section>
+
+<section class="send print-only">
+  <h2>Как ответить</h2>
+  <p class="prose">Напишите в чат в Telegram текстом или голосовыми. Начните с выбранной глубины, дальше ответы по номерам вопросов.</p>
+</section>
+
+<section class="send screen-only">
+  <h2>Отправить ответы</h2>
+  <p class="prose">Нажмите кнопку и вставьте текст в чат в Telegram. Ответы сохраняются только в вашем браузере и никуда не уходят сами.</p>
+  <button type="button" class="copy" id="copy">Скопировать ответы</button>
+  <div id="status" aria-live="polite"></div>
+  <label class="label" for="out">Так будет выглядеть сообщение</label>
+  <textarea id="out" readonly></textarea>
+</section>
+
+<footer class="stamp-wrap">
+  <table class="stamp">
+    <tr>
+      <td rowspan="2" class="big">Планирование производства прицепов<span class="k" style="margin-top:4px">Бриф для собственника</span></td>
+      <td><span class="k">Стадия</span><span class="v">Обследование</span></td>
+      <td><span class="k">Версия</span><span class="v">1</span></td>
+    </tr>
+    <tr>
+      <td><span class="k">Дата</span><span class="v">14.10.2026</span></td>
+      <td><span class="k">Ответы</span><span class="v">чат в Telegram</span></td>
+    </tr>
+  </table>
+</footer>
+
+</main>
+</div>
+
+<script>
+(function(){
+  var ITEMS = [
+    'Видеть заранее, каких деталей не хватит под заказы',
+    'Считать, что и когда заказать у поставщиков',
+    'Называть клиенту реальную дату готовности прицепа',
+    'План производства по дням или неделям',
+    'Видеть, что заказано и едет (транзиты)',
+    'Загрузка участков и людей',
+    'Замены и аналоги деталей',
+    'Брак, отходы, раскрой металла',
+    'Отметка «сделано» в цеху с планшета',
+    'Штрихкоды и сканеры на складе',
+    'Уведомления и сводка в телефоне для руководителя',
+    'Всё в 1С, без двойного ввода'
+  ];
+  var LEVELS = [
+    {v:'now', t:'Сейчас', out:'🔴 Сейчас'},
+    {v:'next', t:'Потом', out:'🟡 Потом'},
+    {v:'space', t:'Космос', out:'🔵 Космос'},
+    {v:'skip', t:'Нет', out:'⚪ Не нужно'}
+  ];
+  var KEY = 'brief-artem-v1';
+
+  var matrix = document.getElementById('matrix');
+  ITEMS.forEach(function(label, i){
+    var row = document.createElement('div');
+    row.className = 'prow';
+    var html = '<span class="plabel" id="pl' + i + '">' + label + '</span><div class="seg" role="radiogroup" aria-labelledby="pl' + i + '">';
+    LEVELS.forEach(function(l){
+      html += '<label class="seg-opt ' + l.v + '"><input type="radio" name="p' + i + '" id="p' + i + '-' + l.v + '" value="' + l.v + '"><span>' + l.t + '</span></label>';
+    });
+    row.innerHTML = html + '</div>';
+    matrix.appendChild(row);
+  });
+
+  function val(id){ return (document.getElementById(id).value || '').trim(); }
+  function pick(name){
+    var r = document.querySelector('input[name="' + name + '"]:checked');
+    return r ? r.value : '';
+  }
+  function or(s){ return s || '—'; }
+
+  function build(){
+    var lines = [];
+    lines.push('Ответы по брифу «Планирование производства»');
+    lines.push('');
+    lines.push('Глубина: ' + or(pick('depth')));
+    lines.push('');
+    lines.push('1. Что болит: ' + or(val('q1')));
+    lines.push('2. Почему сейчас: ' + or(val('q2')));
+    lines.push('3. Во что обходится: ' + or(val('q3')));
+    lines.push('4. Признаки успеха: ' + or(val('q4')));
+    lines.push('5. Масштаб: прицепов в месяц ' + or(val('q5a')) + ', моделей ' + or(val('q5b')) + ', человек на производстве ' + or(val('q5c')));
+    lines.push('6. Срочность: ' + or(pick('q6')));
+    lines.push('7. Бюджет первого этапа: ' + or(pick('q7')));
+    lines.push('8. Предпочтение: ' + or(pick('q8')));
+    lines.push('9. Ответственный: ' + or(val('q9a')) + '; время в неделю: ' + or(pick('q9b')) + '; писать напрямую: ' + or(pick('q9c')));
+
+    var groups = {};
+    ITEMS.forEach(function(label, i){
+      var p = pick('p' + i);
+      if (p) (groups[p] = groups[p] || []).push(label);
+    });
+    var any = LEVELS.some(function(l){ return groups[l.v]; });
+    if (any){
+      lines.push('');
+      lines.push('Приоритеты, взгляд собственника:');
+      LEVELS.forEach(function(l){
+        if (groups[l.v]) lines.push(l.out + ': ' + groups[l.v].join('; '));
+      });
+    }
+    return lines.join('\n');
+  }
+
+  var out = document.getElementById('out');
+  var status = document.getElementById('status');
+
+  function save(){
+    try {
+      var data = {};
+      document.querySelectorAll('main input, main textarea').forEach(function(el){
+        if (el.id === 'out') return;
+        if (el.type === 'radio'){ if (el.checked) data[el.name] = el.value; }
+        else if (el.id) data[el.id] = el.value;
+      });
+      localStorage.setItem(KEY, JSON.stringify(data));
+    } catch(e) {}
+  }
+  function load(){
+    try {
+      var data = JSON.parse(localStorage.getItem(KEY) || '{}');
+      Object.keys(data).forEach(function(k){
+        var r = document.querySelector('input[type="radio"][name="' + k + '"][value="' + CSS.escape(data[k]) + '"]');
+        if (r){ r.checked = true; return; }
+        var el = document.getElementById(k);
+        if (el && el.type !== 'radio') el.value = data[k];
+      });
+    } catch(e) {}
+  }
+  function refresh(){ out.value = build(); }
+
+  load();
+  refresh();
+  document.querySelector('main').addEventListener('input', function(e){
+    if (e.target === out) return;
+    status.textContent = '';
+    refresh();
+    save();
+  });
+  document.querySelector('main').addEventListener('change', function(){ refresh(); save(); });
+
+  document.getElementById('copy').addEventListener('click', function(){
+    var text = build();
+    out.value = text;
+    function done(){ status.textContent = 'Скопировано. Вставьте в чат в Telegram.'; }
+    function fallback(){
+      out.focus();
+      out.select();
+      try { out.setSelectionRange(0, text.length); } catch(e) {}
+      status.textContent = 'Автоматически скопировать не вышло. Текст ниже выделен, скопируйте его вручную.';
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+      else fallback();
+    } catch(e) { fallback(); }
+  });
+})();
+</script>
+
+</body>
+</html>
